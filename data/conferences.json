@@ -344,6 +344,26 @@
         "abstract": null,
         "fullPaper": null
       }
+    },
+    {
+      "id": "sest-2028",
+      "title": "SEST 2028",
+      "shortTitle": "SEST 2028",
+      "website": "https://www.fe.up.pt/sest2028/",
+      "notionUrl": "",
+      "org": "IEEE PES",
+      "year": 2028,
+      "location": "Porto, Portugal (Faculty of Engineering, University of Porto)",
+      "acceptanceRate": null,
+      "dates": {
+        "start": "2028-09-06",
+        "end": "2028-09-08"
+      },
+      "submissionOpens": null,
+      "deadlines": {
+        "abstract": "2027-12-17",
+        "fullPaper": "2028-03-10"
+      }
     }
   ]
 }
