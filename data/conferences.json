@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-10-05T20:00:37.572Z",
+  "syncedAt": "2026-11-04T10:43:49.000Z",
   "source": {
     "database": "List of Specific Conferences",
     "notionUrl": "https://www.notion.so/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -136,13 +136,13 @@
       "location": "Sydney, Australia",
       "acceptanceRate": null,
       "dates": {
-        "start": "2026-12-11",
+        "start": "2026-12-12",
         "end": "2026-12-12"
       },
       "submissionOpens": null,
       "deadlines": {
         "abstract": null,
-        "fullPaper": "2026-08-29"
+        "fullPaper": "2026-08-31"
       }
     },
     {
@@ -162,7 +162,7 @@
       "submissionOpens": "2026-06-26",
       "deadlines": {
         "abstract": null,
-        "fullPaper": "2026-08-15"
+        "fullPaper": "2026-09-30"
       }
     },
     {
@@ -202,14 +202,14 @@
       "submissionOpens": null,
       "deadlines": {
         "abstract": "2026-09-14",
-        "fullPaper": "2027-02-19"
+        "fullPaper": "2027-01-22"
       }
     },
     {
       "id": "3b9d565d-e076-8117-b3a6-c0f09f0e7648",
       "title": "IEEE PES GM 2027",
       "shortTitle": "IEEE PES GM 2027",
-      "website": "https://pes-gm.org/2026-montreal/program-at-a-glance/2027-call-for-papers/",
+      "website": "https://pes-gm.org/2027-san-francisco/2027-call-for-papers/",
       "notionUrl": "https://app.notion.com/p/IEEE-PES-GM-2027-3b9d565de0768117b3a6c0f09f0e7648",
       "org": "IEEE PES",
       "year": 2027,
@@ -259,10 +259,10 @@
         "start": "2027-09-05",
         "end": "2027-09-09"
       },
-      "submissionOpens": "2026-11-01",
+      "submissionOpens": null,
       "deadlines": {
-        "abstract": "2027-03-31",
-        "fullPaper": "2027-03-31"
+        "abstract": null,
+        "fullPaper": "2027-02-28"
       }
     },
     {
@@ -277,12 +277,12 @@
       "acceptanceRate": null,
       "dates": {
         "start": "2027-11-08",
-        "end": "2027-11-08"
+        "end": "2027-11-12"
       },
-      "submissionOpens": null,
+      "submissionOpens": "2026-09-07",
       "deadlines": {
-        "abstract": null,
-        "fullPaper": null
+        "abstract": "2027-01-11",
+        "fullPaper": "2027-07-25"
       }
     },
     {
@@ -317,7 +317,7 @@
       "acceptanceRate": null,
       "dates": {
         "start": "2028-07-23",
-        "end": "2028-07-23"
+        "end": "2028-07-27"
       },
       "submissionOpens": null,
       "deadlines": {
@@ -337,7 +337,7 @@
       "acceptanceRate": null,
       "dates": {
         "start": "2028-08-27",
-        "end": "2028-08-27"
+        "end": "2028-09-01"
       },
       "submissionOpens": null,
       "deadlines": {

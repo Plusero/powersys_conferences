@@ -159,6 +159,26 @@ NOTION_DATABASE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 This refreshes `data/conferences.json`, which the site reads at build time.
 
+### Official-source corrections
+
+`data/conference-overrides.json` records corrections checked against official
+conference websites, including source URLs, the verification date, and notes
+where needed. The sync script applies each entry's `changes` by conference ID
+after reading Notion. Partial `dates` and `deadlines` updates preserve the other
+values, while an explicit `null` clears a field.
+
+The November 4, 2026 refresh corrects PowerTech 2027's full-paper deadline to
+February 28, 2027 and removes its unsupported separate abstract deadline. Its
+submission opening is published only as November 2026, so no exact day is stored;
+the official ConfTool portal is live. The refresh also updates AI4PowerGrids
+2026, PES IM 2027, CIRED 2027, the PES GM 2027 link, CIGRE Bangkok 2027, and the
+end dates for PES GM 2028 and CIGRE Paris 2028.
+
+Recheck the linked sources when maintaining these corrections. Remove an
+override once the corresponding Notion fields are accurate, or update it when
+the organizers announce a change. For an immediate local edit, update the
+matching fields in `data/conferences.json` as well as the override.
+
 ## Build & deploy
 
 Run the build, check, and preview commands for your platform from the Linux or Windows usage section above.

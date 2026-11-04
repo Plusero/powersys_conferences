@@ -1,0 +1,75 @@
+{
+  "verifiedOn": "2026-11-04",
+  "conferences": {
+    "3a8d565d-e076-8148-aba1-ccecb4dc622d": {
+      "title": "AI4PowerGrids @ NeurIPS 2026",
+      "sources": ["https://ai4powergrids.github.io/cfp"],
+      "changes": {
+        "dates": { "start": "2026-12-12", "end": "2026-12-12" },
+        "deadlines": { "fullPaper": "2026-08-31" }
+      }
+    },
+    "3b7d565d-e076-81fc-9246-d6326a96521e": {
+      "title": "IEEE PES IM 2027",
+      "sources": ["https://www.pes-im.org/2027-beijing/program/call-for-papers/"],
+      "notes": "Use the initial full-paper deadline, not the final-paper deadline for accepted authors.",
+      "changes": {
+        "deadlines": { "fullPaper": "2026-09-30" }
+      }
+    },
+    "33bd565d-e076-804b-9c57-db54f3cf216d": {
+      "title": "CIRED 2027",
+      "sources": ["https://2027.cired.net/key-dates/"],
+      "notes": "19 February is the registration opening date, not the full-paper deadline.",
+      "changes": {
+        "deadlines": { "fullPaper": "2027-01-22" }
+      }
+    },
+    "3b9d565d-e076-8117-b3a6-c0f09f0e7648": {
+      "title": "IEEE PES GM 2027",
+      "sources": ["https://pes-gm.org/2027-san-francisco/2027-call-for-papers/"],
+      "changes": {
+        "website": "https://pes-gm.org/2027-san-francisco/2027-call-for-papers/"
+      }
+    },
+    "33cd565d-e076-80f5-8d7c-e10987d644a9": {
+      "title": "PowerTech 2027",
+      "sources": [
+        "https://powertech2027.com/call-for-papers/",
+        "https://www.conftool.org/powertech2027/"
+      ],
+      "notes": "The opening is announced only as November 2026; the submission portal is live. No separate abstract deadline is published: the abstract is entered with the full paper.",
+      "changes": {
+        "submissionOpens": null,
+        "deadlines": { "abstract": null, "fullPaper": "2027-02-28" }
+      }
+    },
+    "3c3d565d-e076-81e8-9aba-cf9bd16a3973": {
+      "title": "CIGRE International Symposium 2027",
+      "sources": [
+        "https://cigre-thailand.com/",
+        "https://cigre-thailand.com/2026/en/authors/general-information/"
+      ],
+      "notes": "The synopsis deadline is represented by the abstract field.",
+      "changes": {
+        "dates": { "end": "2027-11-12" },
+        "submissionOpens": "2026-09-07",
+        "deadlines": { "abstract": "2027-01-11", "fullPaper": "2027-07-25" }
+      }
+    },
+    "3c3d565d-e076-81f1-afcf-d41757b6b3ef": {
+      "title": "IEEE PES General Meeting 2028",
+      "sources": ["https://pes-gm.org/"],
+      "changes": {
+        "dates": { "end": "2028-07-27" }
+      }
+    },
+    "3c3d565d-e076-8102-a2b3-e6eac6b2aef3": {
+      "title": "CIGRE Paris Session 2028",
+      "sources": ["https://www.cigre-exhibition.com/paris2028/"],
+      "changes": {
+        "dates": { "end": "2028-09-01" }
+      }
+    }
+  }
+}

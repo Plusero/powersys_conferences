@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const OUT_PATH = join(ROOT, "data", "conferences.json");
+const OVERRIDES_PATH = join(ROOT, "data", "conference-overrides.json");
 
 /** Load `.env` from project root (does not override existing env vars). */
 function loadEnvFile() {
@@ -304,14 +305,30 @@ async function queryAll(dataSourceId, apiKey) {
     cursor = data.has_more ? data.next_cursor : undefined;
   } while (cursor);
 
-  conferences.sort((a, b) => {
+  // Keep corrections verified against official websites across Notion syncs.
+  const overrides = JSON.parse(readFileSync(OVERRIDES_PATH, "utf8")).conferences;
+  const updatedConferences = conferences.map((conference) => {
+    const changes = overrides[conference.id]?.changes;
+    if (!changes) return conference;
+
+    return {
+      ...conference,
+      ...changes,
+      dates: changes.dates
+        ? { ...conference.dates, ...changes.dates }
+        : conference.dates,
+      deadlines: { ...conference.deadlines, ...changes.deadlines },
+    };
+  });
+
+  updatedConferences.sort((a, b) => {
     if (a.year !== b.year) return (a.year ?? 0) - (b.year ?? 0);
     const aStart = a.dates?.start ?? "";
     const bStart = b.dates?.start ?? "";
     return aStart.localeCompare(bStart);
   });
 
-  return conferences;
+  return updatedConferences;
 }
 
 async function main() {
