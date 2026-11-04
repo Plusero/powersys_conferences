@@ -179,6 +179,16 @@ override once the corresponding Notion fields are accurate, or update it when
 the organizers announce a change. For an immediate local edit, update the
 matching fields in `data/conferences.json` as well as the override.
 
+PowerUp 2026 and 2028 are listed directly in `data/conferences.json`, with
+details checked on November 4, 2026 against the [official site](https://power-up.us/)
+and [submission page](https://www.power-up.us/submit). The 2026 edition ran
+September 9–11 in Boulder, Colorado; its paper deadline was January 30, 2026,
+and submissions opened December 1, 2025. The separate poster abstract deadline
+is not used as a paper submission cutoff. The 2028 edition is announced for
+August in Ann Arbor, Michigan; exact days and submission deadlines remain
+unset until announced. These local entries must be retained or added to
+Notion before regenerating the data through a Notion sync.
+
 ## Build & deploy
 
 Run the build, check, and preview commands for your platform from the Linux or Windows usage section above.

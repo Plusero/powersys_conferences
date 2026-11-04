@@ -86,6 +86,26 @@
       }
     },
     {
+      "id": "powerup-2026",
+      "title": "PowerUp 2026",
+      "shortTitle": "PowerUp 2026",
+      "website": "https://power-up.us/",
+      "notionUrl": "",
+      "org": null,
+      "year": 2026,
+      "location": "Boulder, Colorado, USA",
+      "acceptanceRate": null,
+      "dates": {
+        "start": "2026-09-09",
+        "end": "2026-09-11"
+      },
+      "submissionOpens": "2025-12-01",
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": "2026-01-30"
+      }
+    },
+    {
       "id": "2f4d565d-e076-80e1-b00a-cd4e5c896161",
       "title": "ISGT Europe 2026",
       "shortTitle": "ISGT Europe 2026",
@@ -379,6 +399,23 @@
         "start": "2028-07-23",
         "end": "2028-07-27"
       },
+      "submissionOpens": null,
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": null
+      }
+    },
+    {
+      "id": "powerup-2028",
+      "title": "PowerUp 2028",
+      "shortTitle": "PowerUp 2028",
+      "website": "https://power-up.us/",
+      "notionUrl": "",
+      "org": null,
+      "year": 2028,
+      "location": "Ann Arbor, Michigan, USA",
+      "acceptanceRate": null,
+      "dates": null,
       "submissionOpens": null,
       "deadlines": {
         "abstract": null,
