@@ -166,6 +166,26 @@
       }
     },
     {
+      "id": "grid-edge-2027",
+      "title": "IEEE PES Grid Edge Technologies Conference & Exposition 2027",
+      "shortTitle": "IEEE PES Grid Edge 2027",
+      "website": "https://pes-gridedge.org/",
+      "notionUrl": "",
+      "org": "IEEE PES",
+      "year": 2027,
+      "location": "Salt Lake City, UT, USA (Calvin L. Rampton Salt Palace Convention Center)",
+      "acceptanceRate": null,
+      "dates": {
+        "start": "2027-04-19",
+        "end": "2027-04-22"
+      },
+      "submissionOpens": "2026-05-21",
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": "2026-07-24"
+      }
+    },
+    {
       "id": "36fd565d-e076-816c-bf85-d1c6ea4828a1",
       "title": "CIGRE Symposium Heidelberg 2027",
       "shortTitle": "CIGRE Symposium 2027",
