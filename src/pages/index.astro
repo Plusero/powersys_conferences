@@ -56,25 +56,25 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
 
   <main class="container">
     <section class="stats" aria-label="Overview">
-      <div class="stat-card">
-        <div class="value">{conferences.length}</div>
-        <div class="label">Total</div>
-      </div>
+      <button type="button" class="stat-card" data-filter="all" aria-pressed="true">
+        <span class="value">{conferences.length}</span>
+        <span class="label">Total</span>
+      </button>
       {years.map((year) => (
-        <div class="stat-card">
-          <div class="value">{conferences.filter((c) => c.year === year).length}</div>
-          <div class="label">{year}</div>
-        </div>
+        <button type="button" class="stat-card" data-filter={`year:${year}`} aria-pressed="false">
+          <span class="value">{conferences.filter((c) => c.year === year).length}</span>
+          <span class="label">{year}</span>
+        </button>
       ))}
-      <div class="stat-card stat-card--highlight">
-        <div class="value">{acceptingCount}</div>
-        <div class="label">Accepting submissions</div>
-      </div>
+      <button type="button" class="stat-card stat-card--highlight" data-filter="accepting" aria-pressed="false">
+        <span class="value">{acceptingCount}</span>
+        <span class="label">Accepting submissions</span>
+      </button>
       {opensSoonCount > 0 && (
-        <div class="stat-card stat-card--opens-soon">
-          <div class="value">{opensSoonCount}</div>
-          <div class="label">Opening soon</div>
-        </div>
+        <button type="button" class="stat-card stat-card--opens-soon" data-filter="opens_soon" aria-pressed="false">
+          <span class="value">{opensSoonCount}</span>
+          <span class="label">Opening soon</span>
+        </button>
       )}
     </section>
 
@@ -135,7 +135,7 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
   </footer>
 
   <script>
-    const buttons = document.querySelectorAll(".filter-btn");
+    const buttons = document.querySelectorAll("button[data-filter]");
     const cards = document.querySelectorAll(".conference-card");
     const empty = document.getElementById("empty-state");
 
@@ -143,7 +143,9 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
       btn.addEventListener("click", () => {
         const filter = btn.getAttribute("data-filter") ?? "all";
 
-        buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+        buttons.forEach((b) =>
+          b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === filter))
+        );
 
         let visible = 0;
         cards.forEach((card) => {

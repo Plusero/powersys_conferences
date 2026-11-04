@@ -499,6 +499,10 @@ img {
 }
 
 .stat-card {
+  appearance: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
   background: color-mix(in srgb, var(--bg-elevated) 92%, var(--surface-strong));
@@ -526,7 +530,17 @@ img {
   box-shadow: var(--shadow);
 }
 
+.stat-card[aria-pressed="true"] {
+  border-color: var(--accent);
+}
+
+.stat-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .stat-card .value {
+  display: block;
   font-family: var(--font-display);
   font-size: 1.65rem;
   font-weight: 600;
@@ -535,6 +549,7 @@ img {
 }
 
 .stat-card .label {
+  display: block;
   margin-top: 0.35rem;
   font-size: 0.72rem;
   color: var(--text-muted);
