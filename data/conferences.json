@@ -286,6 +286,26 @@
       }
     },
     {
+      "id": "pmaps-2028",
+      "title": "PMAPS 2028",
+      "shortTitle": "PMAPS 2028",
+      "website": "https://www.pmaps.org/cfp2028.html",
+      "notionUrl": "",
+      "org": "PMAPS IS",
+      "year": 2028,
+      "location": "Hong Kong, China (The Hong Kong Polytechnic University / Kowloon Shangri-La Hotel)",
+      "acceptanceRate": null,
+      "dates": {
+        "start": "2028-06-18",
+        "end": "2028-06-21"
+      },
+      "submissionOpens": null,
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": null
+      }
+    },
+    {
       "id": "37dd565d-e076-8199-8586-d3224b713ead",
       "title": "PSCC 2028",
       "shortTitle": "PSCC 2028",
