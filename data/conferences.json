@@ -306,6 +306,26 @@
       }
     },
     {
+      "id": "ieee-pes-gtd-asia-2027",
+      "title": "IEEE PES GTD Asia 2027 Conference and Exposition",
+      "shortTitle": "IEEE PES GTD Asia 2027",
+      "website": "https://www.ieeegtd2027.org/",
+      "notionUrl": "",
+      "org": "IEEE PES",
+      "year": 2027,
+      "location": "Melbourne, Australia",
+      "acceptanceRate": null,
+      "dates": {
+        "start": "2027-09-29",
+        "end": "2027-10-02"
+      },
+      "submissionOpens": null,
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": "2027-02-22"
+      }
+    },
+    {
       "id": "smartgridcomm-2027",
       "title": "IEEE SmartGridComm 2027",
       "shortTitle": "SmartGridComm 2027",
