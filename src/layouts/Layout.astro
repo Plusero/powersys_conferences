@@ -1,4 +1,7 @@
 ---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+
 interface Props {
   title?: string;
   description?: string;
@@ -15,29 +18,34 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="text-scale" content="scale" />
+    {/* The default theme (European blue) is dark; the script below switches
+        this to "light" before first paint when the light theme is saved. */}
+    <meta name="color-scheme" content="dark" />
+    {/* Classic inline script (not a module) so the saved theme applies before
+        first paint. Keep it tiny; the toggle logic lives in ThemeToggle. */}
     <script is:inline>
       (function () {
-        var themeStorageVersion = "2";
-        var stored = localStorage.getItem("theme");
-        var storedVersion = localStorage.getItem("theme-version");
-        var theme =
-          storedVersion === themeStorageVersion &&
-          (stored === "light" || stored === "dark" || stored === "european-blue")
-            ? stored
-            : "european-blue";
-        document.documentElement.setAttribute("data-theme", theme);
+        var theme = "european-blue";
+        try {
+          var stored = localStorage.getItem("theme");
+          if (localStorage.getItem("theme-version") === "2" && (stored === "light" || stored === "dark")) {
+            theme = stored;
+          }
+        } catch (e) {
+          // Site data blocked: keep the default theme.
+        }
+        document.documentElement.dataset.theme = theme;
+        if (theme === "light") {
+          document.querySelector('meta[name="color-scheme"]').content = "light";
+        }
       })();
     </script>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <Font cssVariable="--font-dm-sans" preload={[{ subset: "latin" }]} />
+    <Font cssVariable="--font-fraunces" preload={[{ subset: "latin" }]} />
     <title>{title}</title>
   </head>
   <body>
@@ -45,7 +53,3 @@ const {
     <slot />
   </body>
 </html>
-
-<style is:global>
-  @import "../styles/global.css";
-</style>

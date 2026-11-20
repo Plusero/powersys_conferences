@@ -1,4 +1,9 @@
-<button type="button" class="theme-toggle" id="theme-toggle" aria-label="Change theme">
+<button type="button" class="theme-toggle" id="theme-toggle">
+  {/* One action label per theme; CSS shows only the one for the current
+      theme, so the accessible name stays correct without JavaScript. */}
+  <span class="visually-hidden" data-theme-label="european-blue">Switch to light theme</span>
+  <span class="visually-hidden" data-theme-label="light">Switch to dark theme</span>
+  <span class="visually-hidden" data-theme-label="dark">Switch to European blue theme</span>
   <svg class="theme-toggle__icon theme-toggle__icon--sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
     <circle cx="12" cy="12" r="4"></circle>
     <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
@@ -12,43 +17,65 @@
 </button>
 
 <script>
+  // The inline script in Layout.astro has already applied any saved theme
+  // before first paint; this script only handles changes.
   type Theme = "european-blue" | "light" | "dark";
 
-  const themeStorageVersion = "2";
+  const DEFAULT_THEME: Theme = "european-blue";
+  const STORAGE_VERSION = "2";
   const themes: Theme[] = ["european-blue", "light", "dark"];
-  const themeLabels: Record<Theme, string> = {
-    "european-blue": "European blue",
-    light: "Light",
-    dark: "Dark",
-  };
 
-  function isTheme(value: string | null): value is Theme {
-    return value === "european-blue" || value === "light" || value === "dark";
+  function isTheme(value: unknown): value is Theme {
+    return themes.includes(value as Theme);
   }
 
-  function getPreferredTheme(): Theme {
-    const stored = localStorage.getItem("theme");
-    const storedVersion = localStorage.getItem("theme-version");
-    return storedVersion === themeStorageVersion && isTheme(stored)
-      ? stored
-      : "european-blue";
+  function showTheme(theme: Theme) {
+    document.documentElement.dataset.theme = theme;
+    document
+      .querySelector('meta[name="color-scheme"]')
+      ?.setAttribute("content", theme === "light" ? "light" : "dark");
   }
 
-  function applyTheme(theme: Theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-    localStorage.setItem("theme-version", themeStorageVersion);
-    toggle?.setAttribute("aria-label", `Change theme. Current theme: ${themeLabels[theme]}`);
-    toggle?.setAttribute("title", `Theme: ${themeLabels[theme]}`);
+  function savedTheme(): Theme {
+    try {
+      const stored = localStorage.getItem("theme");
+      if (localStorage.getItem("theme-version") === STORAGE_VERSION && isTheme(stored)) {
+        return stored;
+      }
+    } catch {
+      // Site data blocked.
+    }
+    return DEFAULT_THEME;
   }
 
-  const toggle = document.getElementById("theme-toggle");
-  applyTheme(getPreferredTheme());
+  // Store only an explicit choice; going back to the default clears it, so a
+  // future change of default reaches everyone who never picked a theme.
+  function saveTheme(theme: Theme) {
+    try {
+      if (theme === DEFAULT_THEME) {
+        localStorage.removeItem("theme");
+        localStorage.removeItem("theme-version");
+      } else {
+        localStorage.setItem("theme-version", STORAGE_VERSION);
+        localStorage.setItem("theme", theme);
+      }
+    } catch {
+      // Site data blocked: the theme still applies to this page view.
+    }
+  }
 
-  toggle?.addEventListener("click", () => {
-    const current = document.documentElement.getAttribute("data-theme");
-    const index = themes.indexOf(isTheme(current) ? current : "european-blue");
+  document.getElementById("theme-toggle")?.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme;
+    const index = themes.indexOf(isTheme(current) ? current : DEFAULT_THEME);
     const next = themes[(index + 1) % themes.length];
-    applyTheme(next);
+    showTheme(next);
+    saveTheme(next);
+  });
+
+  // Keep other open tabs in sync with a change made here.
+  window.addEventListener("storage", (event) => {
+    if (event.key === null || event.key === "theme" || event.key === "theme-version") {
+      showTheme(savedTheme());
+    }
   });
 </script>

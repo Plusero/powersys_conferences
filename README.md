@@ -195,6 +195,8 @@ Run the build, check, and preview commands for your platform from the Linux or W
 
 GitHub Pages deployment is configured in `.github/workflows/deploy.yml`. Enable **Pages** in the repo settings (source: GitHub Actions).
 
+The web fonts (DM Sans, Fraunces) and the country flag images are downloaded at build time (fonts from Google Fonts via Astro's `fonts` config, flags from flagcdn.com via `astro:assets`) and served from the site itself, so visitors' browsers never contact those services. A build therefore needs network access the first time; results are cached in `node_modules/.astro`, so later local builds only fetch what is new (for example, the flag of a new host country).
+
 If your repo name is not `powersys_conferences`, update `base` in `astro.config.mjs` to match `/your-repo-name/`.
 
 ## Troubleshooting

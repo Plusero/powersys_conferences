@@ -341,9 +341,14 @@ export function countryNameToIso(countryName: string): string | null {
   return COUNTRY_TO_ISO[normalizeCountryKey(countryName)] ?? null;
 }
 
-/** PNG flag image (works on Windows; Unicode flag emojis often show as "IT", "PT", etc.). */
+/**
+ * PNG flag image source (works on Windows, where Unicode flag emojis often show
+ * as "IT", "PT", etc.). astro:assets downloads and optimizes it at build time
+ * (see image.domains in astro.config.mjs), so visitors never request flagcdn.com.
+ * 48x36 gives a sharp 2x variant of the 24x18 display size.
+ */
 export function flagImageUrl(iso: string): string {
-  return `https://flagcdn.com/24x18/${iso.toLowerCase()}.png`;
+  return `https://flagcdn.com/48x36/${iso.toLowerCase()}.png`;
 }
 
 export function getLocationFlag(location: string | null): {

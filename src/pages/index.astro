@@ -18,54 +18,51 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
   month: "long",
   year: "numeric",
 });
+const syncedIso = data.syncedAt.slice(0, 10);
 ---
 
 <Layout>
-  <header class="site-header container">
-    <div class="eu-stars" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <div class="site-header__top">
-      <div class="site-header__brand">
-        <p class="site-header__eyebrow">Power systems · Europe</p>
-        <h1>Power Systems Conferences</h1>
-        <p class="lead">
-          A curated tracker for IEEE PES, CIGRE, and CIRED events — dates,
-          locations, and submission deadlines in one place.
-        </p>
+  <header class="site-header">
+    <div class="site-header__inner container">
+      <div class="eu-stars" aria-hidden="true">
+        {Array.from({ length: 12 }, (_, i) => <span style={`--i: ${i}`}></span>)}
       </div>
-      <ThemeToggle />
-    </div>
-    <div class="meta-bar">
-      <span>{conferences.length} conferences</span>
-      <span class="meta-bar__dot" aria-hidden="true">·</span>
-      <span>Last updated {syncedDate}</span>
+      <div class="site-header__top">
+        <div class="site-header__brand">
+          <p class="site-header__eyebrow">Power systems · Europe</p>
+          <h1>Power Systems Conferences</h1>
+          <p class="lead">
+            A curated tracker for IEEE PES, CIGRE, and CIRED events — dates,
+            locations, and submission deadlines in one place.
+          </p>
+        </div>
+        <ThemeToggle />
+      </div>
+      <p class="meta-bar">
+        <span>{conferences.length} conferences</span>
+        <span class="meta-bar__dot" aria-hidden="true">·</span>
+        <span>Last updated&nbsp;<time datetime={syncedIso}>{syncedDate}</time></span>
+      </p>
     </div>
   </header>
 
   <main class="container">
-    <section class="stats" aria-label="Overview">
+    <div class="stats" role="group" aria-label="Overview">
       <button type="button" class="stat-card" data-filter="all" aria-pressed="true">
         <span class="value">{conferences.length}</span>
         <span class="label">Total</span>
       </button>
-      {years.map((year) => (
-        <button type="button" class="stat-card" data-filter={`year:${year}`} aria-pressed="false">
-          <span class="value">{conferences.filter((c) => c.year === year).length}</span>
-          <span class="label">{year}</span>
-        </button>
-      ))}
+      {years.map((year) => {
+        const count = conferences.filter((c) => c.year === year).length;
+        return (
+          <button type="button" class="stat-card" data-filter={`year:${year}`} aria-pressed="false">
+            <span class="value">{count}</span>
+            {/* Reads "8 conferences in 2026" instead of "8 2026" */}
+            <span class="visually-hidden">{count === 1 ? " conference in" : " conferences in"}</span>
+            <span class="label">{year}</span>
+          </button>
+        );
+      })}
       <button type="button" class="stat-card stat-card--highlight" data-filter="accepting" aria-pressed="false">
         <span class="value">{acceptingCount}</span>
         <span class="label">Accepting submissions</span>
@@ -76,9 +73,9 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
           <span class="label">Opening soon</span>
         </button>
       )}
-    </section>
+    </div>
 
-    <nav class="filters" aria-label="Filter conferences">
+    <search class="filters" aria-label="Filter conferences">
       <button type="button" class="filter-btn" data-filter="all" aria-pressed="true">
         All
       </button>
@@ -118,16 +115,20 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
           {org}
         </button>
       ))}
-    </nav>
+    </search>
 
-    <section class="conference-grid" id="conference-grid" aria-label="Conferences">
-      {conferences.map((conference) => (
-        <ConferenceCard conference={conference} />
-      ))}
+    <section class="conferences" aria-label="Conferences">
+      {/* role="list" restores list semantics that Safari drops for list-style: none */}
+      <ul class="conference-grid" role="list">
+        {conferences.map((conference) => (
+          <li><ConferenceCard conference={conference} /></li>
+        ))}
+      </ul>
       <p class="empty-state" id="empty-state" hidden>
         No conferences match this filter.
       </p>
     </section>
+    <p class="visually-hidden" id="filter-status" role="status"></p>
   </main>
 
   <footer class="site-footer container">
@@ -135,42 +136,40 @@ const syncedDate = new Date(data.syncedAt).toLocaleDateString("en-GB", {
   </footer>
 
   <script>
-    const buttons = document.querySelectorAll("button[data-filter]");
-    const cards = document.querySelectorAll(".conference-card");
+    const buttons = document.querySelectorAll<HTMLButtonElement>("button[data-filter]");
+    const cards = document.querySelectorAll<HTMLElement>(".conference-card");
     const empty = document.getElementById("empty-state");
+    const status = document.getElementById("filter-status");
 
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const filter = btn.getAttribute("data-filter") ?? "all";
+    function matches(card: HTMLElement, filter: string): boolean {
+      const { year = "", org = "", accepting, opensSoon } = card.dataset;
+      if (filter === "accepting") return accepting === "true";
+      if (filter === "opens_soon") return opensSoon === "true";
+      if (filter.startsWith("year:")) return year === filter.slice(5);
+      if (filter.startsWith("org:")) return org === filter.slice(4);
+      return true;
+    }
 
-        buttons.forEach((b) =>
-          b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === filter))
-        );
+    function applyFilter(filter: string) {
+      for (const button of buttons) {
+        button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
+      }
 
-        let visible = 0;
-        cards.forEach((card) => {
-          const year = card.getAttribute("data-year") ?? "";
-          const org = card.getAttribute("data-org") ?? "";
-          const accepting = card.getAttribute("data-accepting") === "true";
-          const opensSoon = card.getAttribute("data-opens-soon") === "true";
-          let show = true;
+      let visible = 0;
+      for (const card of cards) {
+        // Hide the list item, so the list's item count stays accurate.
+        const item = card.closest("li") ?? card;
+        item.hidden = !matches(card, filter);
+        if (!item.hidden) visible++;
+      }
 
-          if (filter === "accepting") {
-            show = accepting;
-          } else if (filter === "opens_soon") {
-            show = opensSoon;
-          } else if (filter.startsWith("year:")) {
-            show = year === filter.slice(5);
-          } else if (filter.startsWith("org:")) {
-            show = org === filter.slice(4);
-          }
+      if (empty) empty.hidden = visible > 0;
+      // Announce the result; the grid change itself is silent for screen readers.
+      if (status) status.textContent = `Showing ${visible} of ${cards.length} conferences`;
+    }
 
-          card.setAttribute("data-hidden", String(!show));
-          if (show) visible++;
-        });
-
-        if (empty) empty.hidden = visible > 0;
-      });
-    });
+    for (const button of buttons) {
+      button.addEventListener("click", () => applyFilter(button.dataset.filter ?? "all"));
+    }
   </script>
 </Layout>

@@ -46,6 +46,8 @@
   --header-bg:
     radial-gradient(circle at 12% 18%, rgba(255, 204, 0, 0.18), transparent 12rem),
     linear-gradient(135deg, rgba(0, 51, 153, 0.96), rgba(7, 25, 76, 0.92));
+  --header-stripe: rgba(37, 99, 235, 0.08);
+  --header-sheen: rgba(255, 255, 255, 0.5);
 }
 
 /* ── Light theme ── */
@@ -72,11 +74,11 @@
 
   --org-ieee: #1d4ed8;
   --org-cigre: #475569;
-  --org-cired: #b45309;
+  --org-cired: #92400e;
 
-  --deadline-past: #94a3b8;
-  --deadline-soon: #ea580c;
-  --deadline-upcoming: #059669;
+  --deadline-past: #5f6f84;
+  --deadline-soon: #c2410c;
+  --deadline-upcoming: #047857;
 
   --accepting: #047857;
   --accepting-soft: #ecfdf5;
@@ -93,6 +95,8 @@
   --hero-gradient: linear-gradient(135deg, #123047 0%, #0f766e 58%, #2563eb 100%);
   --page-line: rgba(20, 32, 51, 0.045);
   --header-bg: linear-gradient(135deg, rgba(232, 246, 243, 0.94), rgba(241, 246, 252, 0.9));
+  --header-stripe: rgba(37, 99, 235, 0.08);
+  --header-sheen: rgba(255, 255, 255, 0.5);
 }
 
 /* ── Dark theme ── */
@@ -121,7 +125,7 @@
   --org-cigre: #cbd5e1;
   --org-cired: #fcd34d;
 
-  --deadline-past: #64748b;
+  --deadline-past: #8090a6;
   --deadline-soon: #fb923c;
   --deadline-upcoming: #34d399;
 
@@ -140,15 +144,18 @@
   --hero-gradient: linear-gradient(135deg, #f8fafc 0%, #99f6e4 52%, #93c5fd 100%);
   --page-line: rgba(237, 242, 247, 0.035);
   --header-bg: linear-gradient(135deg, rgba(20, 42, 48, 0.94), rgba(22, 31, 45, 0.9));
+  --header-stripe: rgba(94, 234, 212, 0.12);
+  --header-sheen: rgba(255, 255, 255, 0.035);
 }
 
 /* ── Shared tokens ── */
 :root {
   --radius: 8px;
   --radius-lg: 8px;
-  --radius-xl: 8px;
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-display: "Fraunces", Georgia, serif;
+  /* Self-hosted families from the Astro fonts config (see Layout.astro) */
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-fraunces);
+  --stripe-blue: rgb(37 99 235);
   --transition: 0.2s ease;
 }
 
@@ -158,14 +165,21 @@
   box-sizing: border-box;
 }
 
+/* Leave the root font size to the browser so user/OS text-size settings apply. */
 html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+  /* Keep focused or scrolled-to content clear of the sticky filter bar
+     (which is only sticky on viewports at least 36em tall, see .filters). */
+  @media (height >= 36em) {
+    scroll-padding-top: 5rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: var(--font-sans);
   font-weight: 400;
   line-height: 1.6;
@@ -181,7 +195,7 @@ body {
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 55%, transparent), transparent 36rem),
+    linear-gradient(180deg, color-mix(in oklab, var(--accent-soft) 55%, transparent), transparent 36rem),
     linear-gradient(90deg, var(--page-line) 1px, transparent 1px),
     linear-gradient(180deg, var(--page-line) 1px, transparent 1px),
     var(--bg);
@@ -194,8 +208,8 @@ body {
   inset: 0;
   opacity: 0.18;
   background-image:
-    radial-gradient(circle at center, rgba(255, 204, 0, 0.72) 0 1.2px, transparent 1.5px),
-    radial-gradient(circle at center, rgba(255, 204, 0, 0.48) 0 1px, transparent 1.35px);
+    radial-gradient(circle at center, color-mix(in oklab, var(--accent) 72%, transparent) 0 1.2px, transparent 1.5px),
+    radial-gradient(circle at center, color-mix(in oklab, var(--accent) 48%, transparent) 0 1px, transparent 1.35px);
   background-position: 8px 10px, 31px 33px;
   background-size: 88px 88px, 132px 132px;
 }
@@ -207,6 +221,9 @@ h3 {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
+  text-wrap: balance;
+  /* Break a long word only when it can't fit (e.g. large user text sizes). */
+  overflow-wrap: anywhere;
 }
 
 a {
@@ -221,21 +238,28 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
+p,
+li {
+  text-wrap: pretty;
+}
+
 img {
   max-width: 100%;
   height: auto;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+/* Hidden visually but kept in the accessibility tree; focusable content
+   inside it becomes visible on focus. */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
 }
 
 .container {
@@ -244,37 +268,27 @@ img {
 }
 
 /* ── Header ── */
+/* The header is the full-bleed band; the container inside holds the content.
+   overflow: clip keeps the decorative stars from causing a sideways scroll. */
 .site-header {
-  position: relative;
-  padding: 3.35rem 0 2.5rem;
+  overflow: clip;
   margin-bottom: 1.4rem;
+  background:
+    linear-gradient(115deg, transparent 0 64%, var(--header-stripe) 64% 65%, transparent 65%),
+    linear-gradient(145deg, var(--header-sheen), transparent 38%),
+    var(--header-bg);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.site-header__inner {
+  position: relative;
+  padding-block: 3.35rem 2.5rem;
 }
 
 .site-header__top,
 .meta-bar {
   position: relative;
   z-index: 1;
-}
-
-.site-header::before {
-  content: "";
-  position: absolute;
-  inset: 0 50%;
-  z-index: -1;
-  width: 100vw;
-  margin-left: -50vw;
-  background:
-    linear-gradient(115deg, transparent 0 64%, rgba(37, 99, 235, 0.08) 64% 65%, transparent 65%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.5), transparent 38%),
-    var(--header-bg);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-[data-theme="dark"] .site-header::before {
-  background:
-    linear-gradient(115deg, transparent 0 64%, rgba(94, 234, 212, 0.12) 64% 65%, transparent 65%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 38%),
-    var(--header-bg);
 }
 
 .eu-stars {
@@ -293,10 +307,11 @@ img {
   opacity: 0.52;
 }
 
+/* Twelve stars on a circle; each span sets --i (0–11) in the markup. */
 .eu-stars span {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: calc(50% + 34% * sin(var(--i) * 30deg));
+  top: calc(50% - 34% * cos(var(--i) * 30deg));
   width: clamp(0.38rem, 1vw, 0.68rem);
   aspect-ratio: 1;
   background: var(--accent);
@@ -312,68 +327,8 @@ img {
     2% 35%,
     39% 35%
   );
-  filter: drop-shadow(0 0 0.45rem rgba(255, 204, 0, 0.32));
-  transform: translate(-50%, -50%);
-}
-
-.eu-stars span:nth-child(1) {
-  top: 16%;
-  left: 50%;
-}
-
-.eu-stars span:nth-child(2) {
-  top: 20.6%;
-  left: 67%;
-}
-
-.eu-stars span:nth-child(3) {
-  top: 33%;
-  left: 79.4%;
-}
-
-.eu-stars span:nth-child(4) {
-  top: 50%;
-  left: 84%;
-}
-
-.eu-stars span:nth-child(5) {
-  top: 67%;
-  left: 79.4%;
-}
-
-.eu-stars span:nth-child(6) {
-  top: 79.4%;
-  left: 67%;
-}
-
-.eu-stars span:nth-child(7) {
-  top: 84%;
-  left: 50%;
-}
-
-.eu-stars span:nth-child(8) {
-  top: 79.4%;
-  left: 33%;
-}
-
-.eu-stars span:nth-child(9) {
-  top: 67%;
-  left: 20.6%;
-}
-
-.eu-stars span:nth-child(10) {
-  top: 50%;
-  left: 16%;
-}
-
-.eu-stars span:nth-child(11) {
-  top: 33%;
-  left: 20.6%;
-}
-
-.eu-stars span:nth-child(12) {
-  top: 20.6%;
-  left: 33%;
+  filter: drop-shadow(0 0 0.45rem color-mix(in oklab, var(--accent) 32%, transparent));
+  translate: -50% -50%;
 }
 
 .site-header__top {
@@ -399,14 +354,21 @@ img {
   text-transform: uppercase;
   color: var(--accent);
   background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
   border-radius: 999px;
+}
+
+/* The translucent pill sits on the header's light sheen; give it a solid
+   backing in the navy theme so the yellow text keeps 4.5:1 contrast. */
+[data-theme="european-blue"] .site-header__eyebrow {
+  background: color-mix(in oklab, var(--accent) 14%, var(--bg));
 }
 
 .site-header h1 {
   max-width: 15ch;
   margin: 0 0 0.85rem;
-  font-size: clamp(2.45rem, 7vw, 5.1rem);
+  /* rem + vw so the size follows both the viewport and the user's text size */
+  font-size: clamp(2.45rem, 0.5rem + 6.3vw, 5.1rem);
   background: var(--hero-gradient);
   background-clip: text;
   -webkit-background-clip: text;
@@ -416,7 +378,7 @@ img {
 .site-header .lead {
   margin: 0;
   max-width: 47rem;
-  font-size: clamp(1rem, 1.6vw, 1.22rem);
+  font-size: clamp(1rem, 0.5rem + 0.95vw, 1.22rem);
   color: var(--text-muted);
 }
 
@@ -425,7 +387,7 @@ img {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.6rem 1rem;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 0;
   font-size: 0.875rem;
   color: var(--text-muted);
 }
@@ -435,7 +397,7 @@ img {
   align-items: center;
   min-height: 2rem;
   padding: 0.28rem 0.68rem;
-  background: color-mix(in srgb, var(--surface-strong) 72%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 72%, transparent);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
   box-shadow: var(--shadow-sm);
@@ -450,8 +412,8 @@ img {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
   padding: 0;
   border: 1px solid var(--toggle-border);
   border-radius: var(--radius);
@@ -459,41 +421,55 @@ img {
   color: var(--text-muted);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  translate: 0;
   transition:
     background var(--transition),
     border-color var(--transition),
     color var(--transition),
-    transform var(--transition);
+    translate var(--transition);
 }
 
 .theme-toggle:hover {
   color: var(--text);
   border-color: var(--accent);
-  transform: translateY(-1px);
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 -1px;
+  }
 }
 
 .theme-toggle__icon {
   grid-area: 1 / 1;
   opacity: 0;
-  transform: rotate(30deg) scale(0.6);
-  transition: opacity var(--transition), transform var(--transition);
+  transition: opacity var(--transition), rotate var(--transition), scale var(--transition);
+  @media (prefers-reduced-motion: no-preference) {
+    rotate: 30deg;
+    scale: 0.6;
+  }
 }
 
 [data-theme="european-blue"] .theme-toggle__icon--star,
 [data-theme="light"] .theme-toggle__icon--sun,
 [data-theme="dark"] .theme-toggle__icon--moon {
   opacity: 1;
-  transform: none;
+  rotate: none;
+  scale: none;
 }
 
 [data-theme="european-blue"] .theme-toggle__icon--star {
   color: var(--accent);
 }
 
+/* Expose only the action label for the current theme (the button's name). */
+:root:not([data-theme="european-blue"]) .theme-toggle [data-theme-label="european-blue"],
+:root:not([data-theme="light"]) .theme-toggle [data-theme-label="light"],
+:root:not([data-theme="dark"]) .theme-toggle [data-theme-label="dark"] {
+  display: none;
+}
+
 /* ── Stats ── */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.375rem), 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -501,17 +477,18 @@ img {
 .stat-card {
   appearance: none;
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--bg-elevated) 92%, var(--surface-strong));
+  overflow: clip;
+  background: color-mix(in oklab, var(--bg-elevated) 92%, var(--surface-strong));
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 1rem 1.05rem 0.95rem;
   box-shadow: var(--shadow-sm);
+  translate: 0;
   transition:
-    transform var(--transition),
+    translate var(--transition),
     background var(--transition),
     border-color var(--transition),
     box-shadow var(--transition);
@@ -522,12 +499,14 @@ img {
   position: absolute;
   inset: 0 0 auto;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), rgba(37, 99, 235, 0.55));
+  background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--stripe-blue) 55%, transparent));
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow);
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 -2px;
+  }
 }
 
 .stat-card[aria-pressed="true"] {
@@ -558,8 +537,8 @@ img {
 }
 
 .stat-card--highlight {
-  border-color: color-mix(in srgb, var(--accepting-border) 50%, var(--border));
-  background: color-mix(in srgb, var(--accepting-soft) 84%, var(--bg-elevated));
+  border-color: color-mix(in oklab, var(--accepting-border) 50%, var(--border));
+  background: color-mix(in oklab, var(--accepting-soft) 84%, var(--bg-elevated));
 }
 
 .stat-card--highlight::before {
@@ -571,8 +550,8 @@ img {
 }
 
 .stat-card--opens-soon {
-  border-color: color-mix(in srgb, var(--opens-soon-border) 50%, var(--border));
-  background: color-mix(in srgb, var(--opens-soon-soft) 84%, var(--bg-elevated));
+  border-color: color-mix(in oklab, var(--opens-soon-border) 50%, var(--border));
+  background: color-mix(in oklab, var(--opens-soon-soft) 84%, var(--bg-elevated));
 }
 
 .stat-card--opens-soon::before {
@@ -585,8 +564,6 @@ img {
 
 /* ── Filters ── */
 .filters {
-  position: sticky;
-  top: 0.75rem;
   z-index: 10;
   display: flex;
   flex-wrap: nowrap;
@@ -595,28 +572,41 @@ img {
   max-width: 100%;
   margin: 0 0 1.35rem;
   padding: 0.5rem;
+  /* Default scrollbar width: a thin thumb is too small for some users to grab. */
   overflow-x: auto;
   overscroll-behavior-inline: contain;
-  scrollbar-width: thin;
-  background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  /* Swipes come to rest on a chip. */
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.5rem;
+  background: color-mix(in oklab, var(--bg-elevated) 88%, transparent);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
+
+  /* Sticky only where the bar stays under ~12% of the viewport height
+     (not on landscape phones or at high zoom). */
+  @media (height >= 36em) {
+    position: sticky;
+    top: 0.75rem;
+  }
 }
 
 .filter-btn {
   appearance: none;
-  border: 1px solid transparent;
+  /* 2px border (with 1px less padding) so the selected chip can show a
+     3:1-contrast edge without changing size. */
+  border: 2px solid transparent;
   background: transparent;
   color: var(--text-muted);
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
-  padding: 0.48rem 0.78rem;
+  padding: calc(0.48rem - 1px) calc(0.78rem - 1px);
   border-radius: 7px;
   cursor: pointer;
   white-space: nowrap;
+  scroll-snap-align: start;
   transition:
     background var(--transition),
     color var(--transition),
@@ -631,38 +621,65 @@ img {
 
 .filter-btn[aria-pressed="true"] {
   background: var(--surface-strong);
-  border-color: var(--border);
+  border-color: var(--accent);
   color: var(--text);
   box-shadow: var(--shadow-sm);
 }
 
 .filter-btn--accepting[aria-pressed="true"] {
   background: var(--accepting-soft);
-  border-color: var(--accepting-border);
+  border-color: var(--accepting);
   color: var(--accepting);
 }
 
 .filter-btn--opens-soon[aria-pressed="true"] {
   background: var(--opens-soon-soft);
-  border-color: var(--opens-soon-border);
+  border-color: var(--opens-soon);
   color: var(--opens-soon);
 }
 
+/* Forced colors (e.g. Windows High Contrast) drop backgrounds and shadows,
+   so mark the active filter with a system-colored outline. */
+@media (forced-colors: active) {
+  .stat-card[aria-pressed="true"],
+  .filter-btn[aria-pressed="true"] {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
 /* ── Conference grid ── */
-.conference-grid {
-  display: grid;
-  gap: 1.05rem;
+.conferences {
   margin-bottom: 3.5rem;
 }
 
-@media (min-width: 640px) {
+.conference-grid {
+  display: grid;
+  gap: 1.05rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each list item is a grid cell that the card fills. */
+.conference-grid > li {
+  display: grid;
+}
+
+/* display: grid would otherwise override the browser's [hidden] style. */
+.conference-grid > li[hidden] {
+  display: none;
+}
+
+/* em breakpoints track the user's text size (40em = 640px at the default). */
+@media (width >= 40em) {
   .conference-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.15rem;
   }
 }
 
-@media (min-width: 1120px) {
+@media (width >= 70em) {
   .conference-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -671,7 +688,7 @@ img {
 /* ── Cards ── */
 .conference-card {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   flex-direction: column;
   background: var(--bg-elevated);
@@ -679,8 +696,9 @@ img {
   border-radius: var(--radius-lg);
   padding: 1.2rem 1.2rem 1.1rem;
   box-shadow: var(--shadow-sm);
+  translate: 0;
   transition:
-    transform var(--transition),
+    translate var(--transition),
     box-shadow var(--transition),
     border-color var(--transition),
     background var(--transition);
@@ -695,20 +713,18 @@ img {
 }
 
 .conference-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: var(--border);
-}
-
-.conference-card[data-hidden="true"] {
-  display: none;
+  @media (prefers-reduced-motion: no-preference) {
+    translate: 0 -4px;
+  }
 }
 
 .conference-card--accepting {
-  border-color: color-mix(in srgb, var(--accepting-border) 55%, var(--border));
+  border-color: color-mix(in oklab, var(--accepting-border) 55%, var(--border));
   background: linear-gradient(
     160deg,
-    color-mix(in srgb, var(--accepting-soft) 90%, var(--bg-elevated)) 0%,
+    color-mix(in oklab, var(--accepting-soft) 90%, var(--bg-elevated)) 0%,
     var(--bg-elevated) 58%
   );
   box-shadow:
@@ -717,14 +733,14 @@ img {
 }
 
 .conference-card--accepting::before {
-  background: linear-gradient(90deg, var(--accepting), rgba(37, 99, 235, 0.35));
+  background: linear-gradient(90deg, var(--accepting), color-mix(in oklab, var(--stripe-blue) 35%, transparent));
 }
 
 .conference-card--opens-soon {
-  border-color: color-mix(in srgb, var(--opens-soon-border) 55%, var(--border));
+  border-color: color-mix(in oklab, var(--opens-soon-border) 55%, var(--border));
   background: linear-gradient(
     160deg,
-    color-mix(in srgb, var(--opens-soon-soft) 90%, var(--bg-elevated)) 0%,
+    color-mix(in oklab, var(--opens-soon-soft) 90%, var(--bg-elevated)) 0%,
     var(--bg-elevated) 58%
   );
   box-shadow:
@@ -733,7 +749,7 @@ img {
 }
 
 .conference-card--opens-soon::before {
-  background: linear-gradient(90deg, var(--opens-soon), rgba(37, 99, 235, 0.26));
+  background: linear-gradient(90deg, var(--opens-soon), color-mix(in oklab, var(--stripe-blue) 26%, transparent));
 }
 
 .submission-badge {
@@ -752,13 +768,13 @@ img {
 .submission-badge[data-status="accepting"] {
   color: var(--accepting);
   background: var(--accepting-soft);
-  border: 1px solid color-mix(in srgb, var(--accepting-border) 35%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accepting-border) 35%, transparent);
 }
 
 .submission-badge[data-status="opens_soon"] {
   color: var(--opens-soon);
   background: var(--opens-soon-soft);
-  border: 1px solid color-mix(in srgb, var(--opens-soon-border) 35%, transparent);
+  border: 1px solid color-mix(in oklab, var(--opens-soon-border) 35%, transparent);
 }
 
 .submission-badge__dot {
@@ -766,18 +782,21 @@ img {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  animation: pulse 2.5s ease-in-out infinite;
 }
 
+/* Two pulses (5s) draw the eye without needing a pause control
+   (WCAG 2.2.2); none at all when the user asks for reduced motion. */
 .submission-badge[data-status="accepting"] .submission-badge__dot {
   background: var(--accepting);
   box-shadow: 0 0 0 3px var(--accepting-glow);
+  @media (prefers-reduced-motion: no-preference) {
+    animation: pulse 2.5s ease-in-out 2;
+  }
 }
 
 .submission-badge[data-status="opens_soon"] .submission-badge__dot {
   background: var(--opens-soon);
   box-shadow: 0 0 0 3px var(--opens-soon-glow);
-  animation: none;
 }
 
 @keyframes pulse {
@@ -790,15 +809,19 @@ img {
   }
 }
 
+/* Content-driven wrapping: the org badge drops below the title only when the
+   card is too narrow for both, at any viewport or text size. */
 .card-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.45rem 0.75rem;
   margin-bottom: 0.7rem;
 }
 
 .card-header h2 {
+  flex: 1 1 12rem;
   margin: 0;
   font-size: 1.18rem;
 }
@@ -825,17 +848,17 @@ img {
 }
 
 .org-badge[data-org="IEEE PES"] {
-  background: color-mix(in srgb, var(--org-ieee) 14%, var(--bg-elevated));
+  background: color-mix(in oklab, var(--org-ieee) 14%, var(--bg-elevated));
   color: var(--org-ieee);
 }
 
 .org-badge[data-org="CIGRE"] {
-  background: color-mix(in srgb, var(--org-cigre) 14%, var(--bg-elevated));
+  background: color-mix(in oklab, var(--org-cigre) 14%, var(--bg-elevated));
   color: var(--org-cigre);
 }
 
 .org-badge[data-org="CIRED"] {
-  background: color-mix(in srgb, var(--org-cired) 18%, var(--bg-elevated));
+  background: color-mix(in oklab, var(--org-cired) 18%, var(--bg-elevated));
   color: var(--org-cired);
 }
 
@@ -862,7 +885,7 @@ img {
   margin: 0 0 1rem;
   padding: 0.78rem 0.85rem;
   background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 12%, transparent);
   border-radius: var(--radius);
 }
 
@@ -907,16 +930,18 @@ img {
   gap: 0.42rem;
 }
 
+/* The date wraps below its label only when the row is too narrow. */
 .deadline-list li {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 0.75rem;
+  gap: 0.15rem 0.75rem;
   font-size: 0.85rem;
   min-height: 2.1rem;
   padding: 0.42rem 0.55rem;
-  background: color-mix(in srgb, var(--bg-muted) 52%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border-subtle) 72%, transparent);
+  background: color-mix(in oklab, var(--bg-muted) 52%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border-subtle) 72%, transparent);
   border-radius: 7px;
 }
 
@@ -952,12 +977,23 @@ img {
 
 .threshold-tag {
   display: inline-block;
-  margin-left: 0.3rem;
+  margin-inline-start: 0.3rem;
   font-size: 0.62rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--accepting);
+  white-space: nowrap;
+}
+
+/* Text cue for deadlines within 30 days, so urgency isn't shown by color alone. */
+.deadline-tag {
+  margin-inline-end: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--deadline-soon);
   white-space: nowrap;
 }
 
@@ -983,7 +1019,7 @@ img {
   font-weight: 600;
   padding: 0.38rem 0.62rem;
   border-radius: 7px;
-  background: color-mix(in srgb, var(--accent-soft) 72%, transparent);
+  background: color-mix(in oklab, var(--accent-soft) 72%, transparent);
   text-decoration: none;
 }
 
@@ -1004,7 +1040,7 @@ img {
 }
 
 .empty-state {
-  grid-column: 1 / -1;
+  margin: 0;
   text-align: center;
   padding: 3rem 1rem;
   color: var(--text-muted);
@@ -1013,14 +1049,25 @@ img {
   border-radius: var(--radius-lg);
 }
 
-@media (max-width: 720px) {
+/* 44px touch targets on touch screens */
+@media (pointer: coarse) {
+  .filter-btn,
+  .card-links a {
+    min-block-size: 2.75rem;
+  }
+}
+
+@media (width < 45em) {
   .container {
     width: min(100% - 1.25rem, 1180px);
   }
 
   .site-header {
-    padding: 2.1rem 0 1.75rem;
     margin-bottom: 1rem;
+  }
+
+  .site-header__inner {
+    padding-block: 2.1rem 1.75rem;
   }
 
   .site-header__top {
@@ -1036,7 +1083,7 @@ img {
   }
 
   .site-header h1 {
-    font-size: clamp(2.15rem, 12vw, 3.2rem);
+    font-size: clamp(2.15rem, 0.5rem + 10vw, 3.2rem);
   }
 
   .meta-bar {
@@ -1058,16 +1105,5 @@ img {
 
   .conference-card {
     padding: 1.1rem 1rem 1rem;
-  }
-
-  .card-header {
-    flex-direction: column;
-    gap: 0.45rem;
-  }
-
-  .deadline-list li {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.15rem;
   }
 }
