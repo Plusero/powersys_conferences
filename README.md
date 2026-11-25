@@ -186,8 +186,21 @@ September 9–11 in Boulder, Colorado; its paper deadline was January 30, 2026,
 and submissions opened December 1, 2025. The separate poster abstract deadline
 is not used as a paper submission cutoff. The 2028 edition is announced for
 August in Ann Arbor, Michigan; exact days and submission deadlines remain
-unset until announced. These local entries must be retained or added to
-Notion before regenerating the data through a Notion sync.
+unset until announced.
+
+### Local-only entries
+
+Some conferences (PowerUp 2026/2028, IEEE PES Grid Edge 2027, IEEE PES GTD Asia
+2027, IEEE SmartGridComm 2027, PMAPS 2028, SEST 2028) exist only in
+`data/conferences.json`, with an empty `notionUrl`. The sync script keeps any
+entry with an empty `notionUrl` whose ID is not returned by Notion, so these
+survive a Notion sync. Edit them directly in `data/conferences.json`.
+
+The November 25, 2026 refresh moves the IEEE PES GM 2027 full-paper deadline to
+November 13, 2026 (an override; the original flyer said November 10), and
+corrects IEEE SmartGridComm 2027's paper deadline to April 12, 2027 per the
+[official call for papers](https://sgc2027.ieee-smartgridcomm.org/call-papers)
+(March 31 is the workshop/tutorial proposal deadline).
 
 ## Build & deploy
 

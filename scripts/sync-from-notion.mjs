@@ -321,10 +321,21 @@ async function queryAll(dataSourceId, apiKey) {
     };
   });
 
+  // Keep entries added directly to conferences.json (no Notion page) across syncs.
+  if (existsSync(OUT_PATH)) {
+    const existing = JSON.parse(readFileSync(OUT_PATH, "utf8")).conferences ?? [];
+    const notionIds = new Set(updatedConferences.map((c) => c.id));
+    for (const conference of existing) {
+      if (!conference.notionUrl && !notionIds.has(conference.id)) {
+        updatedConferences.push(conference);
+      }
+    }
+  }
+
   updatedConferences.sort((a, b) => {
     if (a.year !== b.year) return (a.year ?? 0) - (b.year ?? 0);
-    const aStart = a.dates?.start ?? "";
-    const bStart = b.dates?.start ?? "";
+    const aStart = a.dates?.start ?? "9999";
+    const bStart = b.dates?.start ?? "9999";
     return aStart.localeCompare(bStart);
   });
 

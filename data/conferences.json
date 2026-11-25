@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-11-04T10:43:49.000Z",
+  "syncedAt": "2026-11-25T16:00:57.434Z",
   "source": {
     "database": "List of Specific Conferences",
     "notionUrl": "https://www.notion.so/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -262,7 +262,7 @@
       "submissionOpens": "2026-10-06",
       "deadlines": {
         "abstract": null,
-        "fullPaper": "2026-11-10"
+        "fullPaper": "2026-11-13"
       }
     },
     {
@@ -329,7 +329,7 @@
       "id": "smartgridcomm-2027",
       "title": "IEEE SmartGridComm 2027",
       "shortTitle": "SmartGridComm 2027",
-      "website": "https://www.comsoc.org/conferences-events/ieee-international-conference-communications-control-and-computing-technologies-smart-grids-2027",
+      "website": "https://sgc2027.ieee-smartgridcomm.org/",
       "notionUrl": "",
       "org": "IEEE ComSoc",
       "year": 2027,
@@ -342,7 +342,7 @@
       "submissionOpens": null,
       "deadlines": {
         "abstract": null,
-        "fullPaper": "2027-03-31"
+        "fullPaper": "2027-04-12"
       }
     },
     {
@@ -426,23 +426,6 @@
       }
     },
     {
-      "id": "powerup-2028",
-      "title": "PowerUp 2028",
-      "shortTitle": "PowerUp 2028",
-      "website": "https://power-up.us/",
-      "notionUrl": "",
-      "org": null,
-      "year": 2028,
-      "location": "Ann Arbor, Michigan, USA",
-      "acceptanceRate": null,
-      "dates": null,
-      "submissionOpens": null,
-      "deadlines": {
-        "abstract": null,
-        "fullPaper": null
-      }
-    },
-    {
       "id": "3c3d565d-e076-8102-a2b3-e6eac6b2aef3",
       "title": "CIGRE Paris Session 2028",
       "shortTitle": "CIGRE Paris 2028",
@@ -480,6 +463,23 @@
       "deadlines": {
         "abstract": "2027-12-17",
         "fullPaper": "2028-03-10"
+      }
+    },
+    {
+      "id": "powerup-2028",
+      "title": "PowerUp 2028",
+      "shortTitle": "PowerUp 2028",
+      "website": "https://power-up.us/",
+      "notionUrl": "",
+      "org": null,
+      "year": 2028,
+      "location": "Ann Arbor, Michigan, USA",
+      "acceptanceRate": null,
+      "dates": null,
+      "submissionOpens": null,
+      "deadlines": {
+        "abstract": null,
+        "fullPaper": null
       }
     }
   ]

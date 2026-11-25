@@ -1,5 +1,5 @@
 {
-  "verifiedOn": "2026-11-04",
+  "verifiedOn": "2026-11-25",
   "conferences": {
     "3a8d565d-e076-8148-aba1-ccecb4dc622d": {
       "title": "AI4PowerGrids @ NeurIPS 2026",
@@ -27,9 +27,14 @@
     },
     "3b9d565d-e076-8117-b3a6-c0f09f0e7648": {
       "title": "IEEE PES GM 2027",
-      "sources": ["https://pes-gm.org/2027-san-francisco/2027-call-for-papers/"],
+      "sources": [
+        "https://pes-gm.org/2027-san-francisco/2027-call-for-papers/",
+        "https://pes-gm.org/wp-content/uploads/2026/06/6.8.26-Flyer_2027-IEEE-PES-GM-CFP.pdf"
+      ],
+      "notes": "The live call for papers gives 13 November 2026; the June 2026 CFP flyer said 10 November.",
       "changes": {
-        "website": "https://pes-gm.org/2027-san-francisco/2027-call-for-papers/"
+        "website": "https://pes-gm.org/2027-san-francisco/2027-call-for-papers/",
+        "deadlines": { "fullPaper": "2026-11-13" }
       }
     },
     "33cd565d-e076-80f5-8d7c-e10987d644a9": {
